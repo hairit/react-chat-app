@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "1TKyyfV7H5vXODdr2I0G4I+j55nOtcfUAZuuehb0DUM=",
+  "Source": "chatapp-server",
+  "BasePath": "_content/chatapp-server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
