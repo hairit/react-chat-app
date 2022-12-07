@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace chatapp_server.Controllers
+namespace chatapp_server
 {
     [Route("api/[controller]")]
     [ApiController]
