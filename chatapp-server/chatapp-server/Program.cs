@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using chatapp_server;
 using chatapp_server.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.Services.AddDbContext<ChatAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ChatApp")));
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
