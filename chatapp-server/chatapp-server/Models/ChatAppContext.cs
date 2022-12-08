@@ -19,14 +19,13 @@ namespace chatapp_server.Models
         public virtual DbSet<ChatGroup> ChatGroups { get; set; } = null!;
         public virtual DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public virtual DbSet<ChatUser> ChatUsers { get; set; } = null!;
-        public virtual DbSet<Invitation> Invitations { get; set; } = null!;
+        public virtual DbSet<GroupUser> GroupUsers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=MARCUS\\TUONGHAI;Initial Catalog=ChatApp;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Name=ChatApp");
             }
         }
 
@@ -35,7 +34,7 @@ namespace chatapp_server.Models
             modelBuilder.Entity<ChatGroup>(entity =>
             {
                 entity.HasKey(e => e.GroupId)
-                    .HasName("PK__ChatGrou__149AF36A0ACFF95D");
+                    .HasName("PK__ChatGrou__149AF36A86AB91EE");
 
                 entity.ToTable("ChatGroup");
 
@@ -50,25 +49,12 @@ namespace chatapp_server.Models
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ChatGroup__Creat__267ABA7A");
-
-                entity.HasMany(d => d.Users)
-                    .WithMany(p => p.Groups)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "GroupUser",
-                        l => l.HasOne<ChatUser>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__GroupUser__UserI__2A4B4B5E"),
-                        r => r.HasOne<ChatGroup>().WithMany().HasForeignKey("GroupId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__GroupUser__Group__29572725"),
-                        j =>
-                        {
-                            j.HasKey("GroupId", "UserId").HasName("PK__GroupUse__C5E27FAEBFB2A8E0");
-
-                            j.ToTable("GroupUser");
-                        });
             });
 
             modelBuilder.Entity<ChatMessage>(entity =>
             {
                 entity.HasKey(e => e.MessageId)
-                    .HasName("PK__ChatMess__C87C0C9C3FB2BDEE");
+                    .HasName("PK__ChatMess__C87C0C9C82A476D4");
 
                 entity.ToTable("ChatMessage");
 
@@ -90,7 +76,7 @@ namespace chatapp_server.Models
             modelBuilder.Entity<ChatUser>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__ChatUser__1788CC4C4E0AF840");
+                    .HasName("PK__ChatUser__1788CC4CEF11A891");
 
                 entity.ToTable("ChatUser");
 
@@ -107,27 +93,28 @@ namespace chatapp_server.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Invitation>(entity =>
+            modelBuilder.Entity<GroupUser>(entity =>
             {
-                entity.ToTable("Invitation");
+                entity.HasKey(e => new { e.GroupId, e.UserId })
+                    .HasName("PK__GroupUse__C5E27FAEC71F942A");
 
-                entity.Property(e => e.InvitationId).ValueGeneratedNever();
+                entity.ToTable("GroupUser");
 
-                entity.Property(e => e.Status)
+                entity.Property(e => e.IsApproved)
                     .HasMaxLength(20)
-                    .IsUnicode(false);
+                    .HasColumnName("isApproved");
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.InvitationCreatedByNavigations)
-                    .HasForeignKey(d => d.CreatedBy)
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.GroupUsers)
+                    .HasForeignKey(d => d.GroupId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Invitatio__Creat__30F848ED");
+                    .HasConstraintName("FK__GroupUser__Group__29572725");
 
-                entity.HasOne(d => d.IsInvitedUser)
-                    .WithMany(p => p.InvitationIsInvitedUsers)
-                    .HasForeignKey(d => d.IsInvitedUserId)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.GroupUsers)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Invitatio__IsInv__31EC6D26");
+                    .HasConstraintName("FK__GroupUser__UserI__2A4B4B5E");
             });
 
             OnModelCreatingPartial(modelBuilder);

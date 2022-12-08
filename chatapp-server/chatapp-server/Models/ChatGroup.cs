@@ -8,7 +8,7 @@ namespace chatapp_server.Models
         public ChatGroup()
         {
             ChatMessages = new HashSet<ChatMessage>();
-            Users = new HashSet<ChatUser>();
+            GroupUsers = new HashSet<GroupUser>();
         }
 
         public Guid GroupId { get; set; }
@@ -18,7 +18,6 @@ namespace chatapp_server.Models
 
         public virtual ChatUser CreatedByNavigation { get; set; } = null!;
         public virtual ICollection<ChatMessage> ChatMessages { get; set; }
-
-        public virtual ICollection<ChatUser> Users { get; set; }
+        public virtual ICollection<GroupUser> GroupUsers { get; set; }
     }
 }

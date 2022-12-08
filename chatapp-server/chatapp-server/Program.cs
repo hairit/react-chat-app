@@ -1,7 +1,14 @@
 using chatapp_server;
+using chatapp_server.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins, policy => { policy.WithOrigins("http://127.0.0.1:5173"); });
+});
 
 // Add services to the container.
 
@@ -10,8 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-//builder.Services.AddDbContext<BloggingContext>(options =>
-//        options.UseSqlServer(ConfigurationExtensions.GetConnectionString("ChatApp"));
+builder.Services.AddDbContext<ChatAppContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ChatApp")));
 
 var app = builder.Build();
 
@@ -23,6 +30,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

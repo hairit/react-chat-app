@@ -1,38 +1,20 @@
-import { useState } from "react";
 import "./App.css";
-import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-} from "@chatscope/chat-ui-kit-react";
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import Login from "./Pages/Login";
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login></Login>,
+  },
+  {
+    path: "/",
+    element: <div>Home</div>,
+  },
+]);
 
 function App() {
-  return (
-    <MainContainer>
-      <ChatContainer>
-        <MessageList>
-          <Message
-            model={{
-              message: "Hello my friend",
-              sentTime: "just now",
-              sender: "Joe",
-            }}
-          />
-          <Message
-            model={{
-              message: "Hello my friend",
-              sentTime: "just now",
-              sender: "Joe",
-            }}
-          />
-        </MessageList>
-        <MessageInput placeholder="Type message here" />
-      </ChatContainer>
-    </MainContainer>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

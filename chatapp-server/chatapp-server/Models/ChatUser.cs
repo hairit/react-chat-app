@@ -9,9 +9,7 @@ namespace chatapp_server.Models
         {
             ChatGroups = new HashSet<ChatGroup>();
             ChatMessages = new HashSet<ChatMessage>();
-            InvitationCreatedByNavigations = new HashSet<Invitation>();
-            InvitationIsInvitedUsers = new HashSet<Invitation>();
-            Groups = new HashSet<ChatGroup>();
+            GroupUsers = new HashSet<GroupUser>();
         }
 
         public Guid UserId { get; set; }
@@ -21,9 +19,6 @@ namespace chatapp_server.Models
 
         public virtual ICollection<ChatGroup> ChatGroups { get; set; }
         public virtual ICollection<ChatMessage> ChatMessages { get; set; }
-        public virtual ICollection<Invitation> InvitationCreatedByNavigations { get; set; }
-        public virtual ICollection<Invitation> InvitationIsInvitedUsers { get; set; }
-
-        public virtual ICollection<ChatGroup> Groups { get; set; }
+        public virtual ICollection<GroupUser> GroupUsers { get; set; }
     }
 }
